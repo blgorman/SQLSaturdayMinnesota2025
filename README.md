@@ -11,7 +11,7 @@ You can find the slides here:
 ## Quick Start Setup
 
 ### Prerequisites
-- .NET 9 SDK or later
+- .NET 10 SDK or later
 - SQL Server (LocalDB, Express, or full SQL Server)
 - Visual Studio 2022 or VS Code
 
