@@ -53,8 +53,8 @@ public class LINQEnhancementsDemos : IAsyncDemo
             "One Fetch Only",
             "Show Contributor Data Report [old way -> Group Join and Select Many",
             "Show Contributor Data Report [new way -> Left Join]",
-            "Something else?",
-            "Better than something else?",
+            "Collated Values in the Underlying Query",
+            "Collated Values using Parameters in the Underlying Query",
             "Exit"
         };
     }
@@ -89,11 +89,11 @@ public class LINQEnhancementsDemos : IAsyncDemo
                 _db.ChangeTracker.Clear(); // Detach all tracked entities
                 break;
             case 7:
-                await SomethingElseImSure();
+                await QueryPlanReuse();
                 _db.ChangeTracker.Clear(); // Detach all tracked entities
                 break;
             case 8:
-                await BetterThanSomethingElse();
+                await QueryPlanReuseWithParameters();
                 _db.ChangeTracker.Clear(); // Detach all tracked entities
                 break;
             case 9:
@@ -253,21 +253,69 @@ public class LINQEnhancementsDemos : IAsyncDemo
         UserInput.WaitForUserInput();
     }
 
-    private async Task SomethingElseImSure()
+    private async Task QueryPlanReuse()
     {
-        string heading = "Something Else";
+        string heading = "Query Plan Reusability";
         Console.WriteLine(heading);
+        Console.WriteLine("Make sure to turn on output to console");
+        Console.WriteLine("Consider running SQL Profiler");
 
+        var categoryFilter = UserInput.GetInputFromUser("What filter for category [hit enter to use default 'movie']?", shouldConfirm: false);
+        if (string.IsNullOrWhiteSpace(categoryFilter))
+        {
+            categoryFilter = "Movie";
+        }
+
+        var results = await _db.Items
+                                .Include(i => i.Category)
+                                .Where(i => i.ItemName.Contains("S")
+                                         && i.Category.CategoryName.Contains(categoryFilter))
+                                .Select(i => new
+                                {
+                                    CategoryName = i.Category.CategoryName,
+                                    ItemName = i.ItemName
+                                })
+                                .OrderBy(i => i.CategoryName).ThenBy(i => i.ItemName)
+                                .ToListAsync();
+
+        Console.WriteLine(ConsolePrinter.PrintBoxedList(results, x => $"Category: {x.CategoryName} has item: {x.ItemName}"));
         Console.WriteLine($"{heading} - Completed");
 
         UserInput.WaitForUserInput();
     }
 
-    private async Task BetterThanSomethingElse()
+    private async Task QueryPlanReuseWithParameters()
     {
-        string heading = "Better than Something Else";
+        string heading = "Query Plan Reusability WITH PARAMETERS";
         Console.WriteLine(heading);
+        Console.WriteLine("Make sure to turn on output to console");
+        Console.WriteLine("Consider running SQL Profiler");
 
+        var itemFilter = UserInput.GetInputFromUser("What filter for item name [hit enter to use default 's']?", shouldConfirm: false);
+        if (string.IsNullOrWhiteSpace(itemFilter))
+        {
+            itemFilter = "s";
+        }
+
+        var categoryFilter = UserInput.GetInputFromUser("What filter for category [hit enter to use default 'movie']?", shouldConfirm: false);
+        if (string.IsNullOrWhiteSpace(categoryFilter))
+        {
+            categoryFilter = "Movie";
+        }
+
+        var results = await _db.Items
+                                .Include(i => i.Category)
+                                .Where(i => i.ItemName.Contains(itemFilter)
+                                         && i.Category.CategoryName.Contains(categoryFilter))
+                                .Select(i => new
+                                {
+                                    CategoryName = i.Category.CategoryName,
+                                    ItemName = i.ItemName
+                                })
+                                .OrderBy(i => i.CategoryName).ThenBy(i => i.ItemName)
+                                .ToListAsync();
+
+        Console.WriteLine(ConsolePrinter.PrintBoxedList(results, x => $"Category: {x.CategoryName} has item: {x.ItemName}"));
         Console.WriteLine($"{heading} - Completed");
 
         UserInput.WaitForUserInput();
