@@ -1,0 +1,70 @@
+name: Build & Deploy with EF Migration Bundle
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore ./EF10_NewFeatureDemos/EF10_NewFeatureDemos.csproj
+
+      - name: Build projects
+        run: dotnet build ./EF10_NewFeatureDemos/EF10_NewFeatureDemos.csproj --no-restore 
+        
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef --version 10.0.0-rc.1.25451.107
+
+      - name: Add .NET tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Apply EF Core migrations
+        working-directory: EF10_NewFeatureDemos
+        env:
+          ConnectionStrings__InventoryDbConnection: ${{ secrets.DB_CONNECTION_STRING }}
+        run: |
+          dotnet ef database update \
+            --project ../EF10_NewFeaturesDbLibrary/EF10_NewFeaturesDbLibrary.csproj \
+            --startup-project . \
+            --verbose
+      
+      # - name: Build migration bundle
+      #   working-directory: EF10_NewFeatureDemos
+      #   run: |
+      #     dotnet ef migrations bundle \
+      #       --skip-build \
+      #       --project ../EF10_NewFeaturesDbLibrary/EF10_NewFeaturesDbLibrary.csproj \
+      #       --startup-project . \
+      #       --output ../../artifacts/migrate.exe \
+      #       --verbose
+            
+
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: migration-bundle
+      #     path: ./artifacts/migrate.exe
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: migration-bundle
+  #         path: ./deploy
+
+  #     - name: Run migration bundle
+  #       env:
+  #         ConnectionStrings__InventoryDbConnection: ${{ secrets.DB_CONNECTION_STRING }}
+  #       run: ./deploy/migrate.exe --connection "$ConnectionStrings__InventoryDbConnection"

@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Migrations\Scripts\Operations\BackupContributorsAndItemContributors_v0.sql" />
+	  <None Remove="Migrations\Scripts\Operations\RestoreContributorsAndItemContributors_v0.sql" />
+	  <None Remove="Migrations\Scripts\Views\vwGetItemDetailSummaries_v0.sql" />
+	</ItemGroup>
+
+	<!--
+	NOTE: dotnet ef migration in a github action
+	really struggles with wildcards
+	<ItemGroup>
+		<EmbeddedResource Include="Migrations\Scripts\**\*.sql" />
+	</ItemGroup>
+	-->
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftEntityFrameworkCoreVersion)" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftEntityFrameworkCoreDesignVersion)">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftEntityFrameworkCoreSqlServerVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="$(MicrosoftExtensionsConfigurationVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsConfigurationJsonVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0-preview.7.25380.108" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\EF10_NewFeaturesModels\EF10_NewFeaturesModels.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Migrations\Scripts\Operations\BackupContributorsAndItemContributors_v0.sql">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Migrations\Scripts\Operations\RestoreContributorsAndItemContributors_v0.sql">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Migrations\Scripts\Views\vwGetItemDetailSummaries_v0.sql">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+</Project>

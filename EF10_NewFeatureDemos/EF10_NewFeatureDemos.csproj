@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>eb7d2f2e-0d2b-4674-86b0-12b5a100cd7c</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="appsettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftEntityFrameworkCoreVersion)" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(MicrosoftEntityFrameworkCoreProxiesVersion)" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftEntityFrameworkCoreSqlServerVersion)" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(MicrosoftEntityFrameworkCoreToolsVersion)">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="$(MicrosoftExtensionsConfigurationVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsConfigurationJsonVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(MicrosoftExtensionsConfigurationUserSecretsVersion)" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsDependencyInjectionVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="$(MicrosoftExtensionsHostingVersion)" />
+		<PackageReference Include="Serilog" Version="4.3.1-dev-02373" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.1-dev-02307" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="9.0.1-dev-02317" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.1-dev-00953" />
+		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\EF10_NewFeaturesDbLibrary\EF10_NewFeaturesDbLibrary.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Remove="**/*.resx" />
+	</ItemGroup>
+
+</Project>
