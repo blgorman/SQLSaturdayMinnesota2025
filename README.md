@@ -30,8 +30,8 @@ You can find the slides here:
 
 3. **Run Database Migrations** ⚠️ **IMPORTANT**
    ```bash
-   cd EF10_NewFeaturesDbLibrary
-   dotnet ef database update
+   cd EF10_NewFeatureDemos
+   dotnet ef database update --project ../EF10_NewFeaturesDbLibrary
    ```
    This step is **required** to create the database schema and seed initial data.
 
@@ -192,7 +192,7 @@ The application presents 6 main categories of EF Core 10 demonstrations through 
 - **Logging**: Check `C:\Logs` directory for detailed application logs
 
 ### Troubleshooting
-- **"Database not found"**: Run `dotnet ef database update` in EF10_NewFeaturesDbLibrary directory
+- **"Database not found"**: Run `dotnet ef database update --project ../EF10_NewFeaturesDbLibrary` from EF10_NewFeatureDemos directory
 - **Connection issues**: Verify SQL Server is running and connection string is correct
 - **Missing data**: Some demos depend on others running first - check demo descriptions above
 - **EF10 Preview**: This code targets EF Core 10 preview - may require specific .NET version
