@@ -17,8 +17,8 @@ public class Program
     {
         var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Development";
         //TODO: Toggle this to turn interceptors on or off to see them in action
-        var useInterceptors = Environment.GetEnvironmentVariable("USE_INTERCEPTORS") ?? "true";
-        var logToConsole = Environment.GetEnvironmentVariable("LOG_TO_CONSOLE") ?? "true"; //only works for queries when the interceptor is on
+        var useInterceptors = Environment.GetEnvironmentVariable("USE_INTERCEPTORS") ?? "false";
+        var logToConsole = Environment.GetEnvironmentVariable("LOG_TO_CONSOLE") ?? "false"; //only works for queries when the interceptor is on
         var appSettingsFile = string.IsNullOrWhiteSpace(environment)
             ? "appsettings.json"
             : $"appsettings.{environment}.json";

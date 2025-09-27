@@ -2,7 +2,7 @@ name: Build & Deploy with EF Migration Bundle
 
 on:
   push:
-    branches: [ main ]
+    branches: [ mainNoWay ]
   workflow_dispatch:
 
 jobs:
